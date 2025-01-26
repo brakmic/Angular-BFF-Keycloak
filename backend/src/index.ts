@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import session from 'express-session';
 import passport from 'passport';
-import KeycloakStrategy from '../../../dist/lib/strategy';
+import KeycloakStrategy from 'passport-keycloak-oauth2-oidc-portable';
 import cors from 'cors';
 import dotenv from 'dotenv-safe';
 import crypto from 'crypto';
