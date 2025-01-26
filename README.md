@@ -2,7 +2,7 @@
 
 ![bff_login](./assets/img/bff_login.png)
 
-Modern authentication implementation using Angular, Express.js BFF, and Keycloak with complete client-side token isolation.
+Modern authentication implementation using [Angular, Express.js BFF, and Keycloak](https://blog.brakmic.com/keycloak-angular-and-the-bff-pattern/) with complete client-side token isolation.
 
 ## Components
 
