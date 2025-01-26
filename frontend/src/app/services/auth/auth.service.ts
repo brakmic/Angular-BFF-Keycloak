@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class AuthService {
   private snackBar = inject(MatSnackBar);
 
   private isLoggedIn = false;
+  public authStateChanged = new Subject<void>();
 
   private apiUrl = '/api';
   private authUrl = '/auth';
@@ -23,11 +25,13 @@ export class AuthService {
 
   markLoggedIn(): void {
     this.isLoggedIn = true;
+    this.authStateChanged.next();
     this.toastr.success('You are now logged in!', 'Success');
   }
 
   markLoggedOut(): void {
     this.isLoggedIn = false;
+    this.authStateChanged.next();
     this.toastr.success('You have been logged out.', 'Success');
   }
 
@@ -37,9 +41,11 @@ export class AuthService {
       .subscribe({
         next: (_res) => {
           this.isLoggedIn = true;
+          this.authStateChanged.next();
         },
         error: (_err) => {
           this.isLoggedIn = false;
+          this.authStateChanged.next();
         }
       });
   }

@@ -32,6 +32,7 @@ export class NavbarComponent implements OnDestroy {
   brand = 'MyApp';
   navItems: NavItem[] = [];
   private routerSub: Subscription;
+  private authSub: Subscription;
 
   constructor(
     public authService: AuthService,
@@ -42,7 +43,9 @@ export class NavbarComponent implements OnDestroy {
     this.routerSub = this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe(() => this.buildNavItems());
-      
+    // rebuild navbar when the authentication state changes
+    this.authSub = this.authService.authStateChanged.subscribe(() => this.buildNavItems());
+
     this.buildNavItems();
   }
 
@@ -94,5 +97,6 @@ export class NavbarComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.routerSub?.unsubscribe();
+    this.authSub?.unsubscribe();
   }
 }
