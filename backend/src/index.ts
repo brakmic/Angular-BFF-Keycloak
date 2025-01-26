@@ -327,7 +327,15 @@ function endLocalSession(req: Request, res: Response, reason: string) {
       logger.error('Error during logout:', { error: err });
       return res.send(renderLogoutSnippet('LOGOUT_ERROR'));
     }
-    req.session.destroy(() => {
+    // Destroy the session
+    req.session.destroy((err) => {
+      if (err) {
+        logger.error('Error destroying session:', { error: err });
+        return res.send(renderLogoutSnippet('LOGOUT_ERROR'));
+      }
+
+      // Clear the session cookie
+      res.clearCookie('angular-session');
       return res.send(renderLogoutSnippet('LOGOUT_SUCCESS'));
     });
   });
