@@ -1,0 +1,42 @@
+<mat-toolbar color="primary">
+  <span class="brand" routerLink="/home">{{brand}}</span>
+  <span class="spacer"></span>
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+    <!-- Debug: {{ navItems | json }} -->
+    <a mat-tab-link 
+       *ngFor="let item of navItems"
+       [routerLink]="item.path" 
+       routerLinkActive="active"
+       [attr.aria-disabled]="item.authRequired && !authService.isAuthenticated()"
+       (click)="item.authRequired && !authService.isAuthenticated() && showAccessDeniedMessage()"
+       [style.display]="shouldShowNavItem(item) ? 'flex' : 'none'">
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span class="tab-header">{{ item.label }}</span>
+    </a>
+  </nav>
+  <button
+    *ngIf="!authService.isAuthenticated()"
+    mat-raised-button
+    color="accent"
+    (click)="login()"
+  >
+    Login
+  </button>
+  <button
+    *ngIf="authService.isAuthenticated()"
+    mat-raised-button
+    color="warn"
+    (click)="logout()"
+  >
+    Logout
+  </button>
+  <!-- <button
+    mat-icon-button
+    class="theme-toggle"
+    (click)="themeService.toggleTheme()"
+  >
+    <mat-icon>{{ themeService.isDarkMode() ? 'dark_mode' : 'light_mode' }}</mat-icon>
+  </button> -->
+</mat-toolbar>
+
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>

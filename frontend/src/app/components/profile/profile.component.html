@@ -1,0 +1,37 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>User Profile</mat-card-title>
+    <mat-card-subtitle>Account Information</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="profile-grid" *ngIf="!loading; else loadingTemplate">
+      <div class="grid-item">
+        <span class="label">Display Name</span>
+        <span class="value">{{ profileForm.value.displayName }}</span>
+      </div>
+      
+      <div class="grid-item">
+        <span class="label">Email Address</span>
+        <span class="value">{{ profileForm.value.email }}</span>
+      </div>
+
+      <div class="grid-item">
+        <span class="label">First Name</span>
+        <span class="value">{{ profileForm.value.firstName }}</span>
+      </div>
+
+      <div class="grid-item">
+        <span class="label">Last Name</span>
+        <span class="value">{{ profileForm.value.lastName }}</span>
+      </div>
+    </div>
+
+    <ng-template #loadingTemplate>
+      <div class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading profile information...</p>
+      </div>
+    </ng-template>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,115 @@
+@use '@angular/material' as mat;
+
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 0.5rem;
+
+  .grid-item {
+    padding: 1rem;
+    background-color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 100);
+    border-radius: 8px;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+
+      mat-icon {
+        color: mat.m2-get-color-from-palette(mat.$m2-indigo-palette, 500);
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+
+      .main-info {
+        flex-grow: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .merchant, .name {
+          font-weight: 500;
+          color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 800);
+        }
+
+        .amount, .price {
+          font-weight: 500;
+          font-size: 1.1rem;
+
+          &.credit {
+            color: mat.m2-get-color-from-palette(mat.$m2-green-palette, 700);
+          }
+          
+          &.debit {
+            color: mat.m2-get-color-from-palette(mat.$m2-red-palette, 700);
+          }
+        }
+      }
+    }
+
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 600);
+
+      .date, .department {
+        flex-grow: 1;
+      }
+
+      .type, .stock-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+
+          &.in-stock {
+            color: mat.m2-get-color-from-palette(mat.$m2-green-palette, 500);
+          }
+
+          &:not(.in-stock) {
+            color: mat.m2-get-color-from-palette(mat.$m2-red-palette, 500);
+          }
+        }
+      }
+    }
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: mat.m2-get-color-from-palette(mat.$m2-red-palette, 600);
+  padding: 1rem;
+  background-color: mat.m2-get-color-from-palette(mat.$m2-red-palette, 50);
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 0;
+
+  p {
+    color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 600);
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}

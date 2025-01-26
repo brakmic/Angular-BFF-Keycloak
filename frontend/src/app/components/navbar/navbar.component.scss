@@ -1,0 +1,93 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: block;
+
+  // Main toolbar styling
+  mat-toolbar {
+    background-color: mat.m2-get-color-from-palette(mat.$m2-indigo-palette, 700);
+    padding: 0 1.5rem;
+    
+    // Brand styling
+    .brand {
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 2rem;
+      font-size: 1.5rem;
+      color: mat.m2-get-color-from-palette(mat.$m2-amber-palette, 300);
+      letter-spacing: 0.5px;
+    }
+
+    // Navigation items
+    nav {
+      mat-icon {
+        color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 50) !important;
+        margin-right: 8px;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        transition: color 0.2s ease;
+      }
+
+      .tab-header {
+        color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 50);
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+      }
+
+      // Active tab styling
+      .active {
+        mat-icon {
+          color: mat.m2-get-color-from-palette(mat.$m2-amber-palette, 300) !important;
+        }
+        .tab-header {
+          color: mat.m2-get-color-from-palette(mat.$m2-amber-palette, 300);
+        }
+      }
+
+      // Hover state
+      a:hover:not(.active) {
+        mat-icon {
+          color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 200) !important;
+        }
+        .tab-header {
+          color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 200);
+        }
+      }
+    }
+
+    // Buttons styling
+    button.mat-raised-button {
+      margin-left: 1rem;
+      text-transform: none;
+      font-size: 0.875rem;
+      letter-spacing: 0.5px;
+    }
+
+    // Theme toggle
+    .theme-toggle {
+      margin-left: 1rem;
+      padding: 0.5rem;
+
+      mat-icon {
+        color: mat.m2-get-color-from-palette(mat.$m2-amber-palette, 300) !important;
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  // Disabled tabs
+  a[aria-disabled="true"] {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: default;
+    
+    mat-icon, .tab-header {
+      color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 400) !important;
+    }
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+}

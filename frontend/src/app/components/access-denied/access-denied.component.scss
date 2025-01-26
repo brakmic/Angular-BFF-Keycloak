@@ -1,0 +1,40 @@
+@use '@angular/material' as mat;
+
+.access-denied-card {
+  max-width: 400px;
+  margin: 2rem auto;
+  text-align: center;
+  padding: 2rem;
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    mat-icon {
+      font-size: 40px;
+      margin-right: 0.5rem;
+    }
+    mat-card-title {
+      font-size: 1.8rem;
+      color: mat.m2-get-color-from-palette(mat.$m2-red-palette, 600);
+    }
+  }
+
+  mat-card-content {
+    p {
+      font-size: 1.1rem;
+      margin: 1rem 0;
+      color: mat.m2-get-color-from-palette(mat.$m2-grey-palette, 700);
+    }
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: center;
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+}

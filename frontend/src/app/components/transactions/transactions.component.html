@@ -1,0 +1,42 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Recent Transactions</mat-card-title>
+    <mat-card-subtitle>Financial Activities</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="data-grid" *ngIf="!loading; else loadingTemplate">
+      <div *ngFor="let transaction of transactions" class="grid-item transaction">
+        <div class="header-row">
+          <mat-icon [class.credit]="transaction.type === 'credit'" 
+                    [class.debit]="transaction.type === 'debit'">
+            {{ getTransactionIcon(transaction.type) }}
+          </mat-icon>
+          <div class="main-info">
+            <span class="merchant">{{ transaction.merchant }}</span>
+            <span class="amount" [class.credit]="transaction.type === 'credit'">
+              {{ transaction.amount }} {{ transaction.currency }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="details-row">
+          <span class="date">{{ transaction.date | date:'mediumDate' }}</span>
+          <span class="type">{{ transaction.type | uppercase }}</span>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #loadingTemplate>
+      <div class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading transactions...</p>
+      </div>
+    </ng-template>
+
+    <div *ngIf="error" class="error-message">
+      <mat-icon>error_outline</mat-icon>
+      {{ error }}
+    </div>
+  </mat-card-content>
+</mat-card>
