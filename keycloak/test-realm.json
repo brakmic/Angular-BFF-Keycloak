@@ -1,0 +1,128 @@
+{
+  "id": "5a64bff1-4c6f-4ec2-ae1c-249102bbce41",
+  "realm": "TestRealm",
+  "enabled": true,
+  "notBefore": 0,
+  "defaultSignatureAlgorithm": "RS256",
+  "sslRequired": "none",
+  "users": [
+    {
+      "username": "test-user",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "test-user@example.com",
+      "firstName": "Test",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "angular-public-client",
+      "name": "Angular OIDC Client",
+      "description": "",
+      "rootUrl": "",
+      "adminUrl": "",
+      "baseUrl": "",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "https://localhost:3000/*"
+      ],
+      "webOrigins": [
+        "https://localhost:3000/*"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": true,
+      "protocol": "openid-connect",
+      "attributes": {
+        "realm_client": "false",
+        "oidc.ciba.grant.enabled": "false",
+        "backchannel.logout.session.required": "true",
+        "post.logout.redirect.uris": "https://localhost:3000/*",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "login_theme": "",
+        "display.on.consent.screen": "false",
+        "consent.screen.text": "",
+        "frontchannel.logout.url": "",
+        "frontchannel.logout.session.required": "true",
+        "logoUri": "",
+        "policyUri": "",
+        "tosUri": "",
+        "access.token.signed.response.alg": "",
+        "id.token.signed.response.alg": "",
+        "id.token.encrypted.response.alg": "",
+        "id.token.encrypted.response.enc": "",
+        "user.info.response.signature.alg": "",
+        "user.info.encrypted.response.alg": "",
+        "user.info.encrypted.response.enc": "",
+        "request.object.signature.alg": "",
+        "request.object.encryption.alg": "",
+        "request.object.encryption.enc": "",
+        "request.object.required": "",
+        "authorization.signed.response.alg": "",
+        "authorization.encrypted.response.alg": "",
+        "authorization.encrypted.response.enc": "",
+        "exclude.session.state.from.auth.response": "",
+        "exclude.issuer.from.auth.response": "",
+        "use.refresh.tokens": "true",
+        "client_credentials.use_refresh_token": "false",
+        "token.response.type.bearer.lower-case": "false",
+        "access.token.lifespan": "",
+        "client.session.idle.timeout": "",
+        "client.session.max.lifespan": "",
+        "client.offline.session.idle.timeout": "",
+        "tls.client.certificate.bound.access.tokens": "false",
+        "pkce.code.challenge.method": "S256",
+        "require.pushed.authorization.requests": "false",
+        "client.use.lightweight.access.token.enabled": "false",
+        "client.introspection.response.allow.jwt.claim.enabled": "false",
+        "minimum.acr.value": "",
+        "acr.loa.map": "{}"
+      },
+      "authenticationFlowBindingOverrides": {
+        "browser": "",
+        "direct_grant": ""
+      },
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "basic",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "organization",
+        "microprofile-jwt"
+      ],
+      "access": {
+        "view": true,
+        "configure": true,
+        "manage": true
+      },
+      "authorizationServicesEnabled": false
+    }
+  ]
+}

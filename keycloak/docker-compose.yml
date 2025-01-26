@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: keycloak-postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloakpassword
+    networks:
+      - devnetwork
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.0
+    container_name: keycloak-server
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloakpassword
+      KC_HOSTNAME: keycloak
+      KC_PROXY: edge
+      KC_HOSTNAME_STRICT: true
+      KC_HEALTH_ENABLED: true
+      KC_HTTP_ENABLED: false  # Disable HTTP completely
+      KC_HTTPS_PORT: 8443
+      KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/conf/certificates/keycloak.p12
+      KC_HTTPS_KEY_STORE_PASSWORD: changeit
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_IMPORT: /opt/keycloak/data/import/test-realm.json
+    volumes:
+      - "${HOST_WORKSPACE}/temp/keycloak/test-realm.json:/opt/keycloak/data/import/test-realm.json"
+      - test_data:/opt/keycloak/data
+      - "${HOST_WORKSPACE}/temp/keycloak/certs:/opt/keycloak/conf/certificates"
+    command: 
+      - start
+      - --import-realm
+      - --verbose
+    restart: unless-stopped
+    ports:
+      - "8443:8443"  # HTTPS endpoint
+      - "9000:9000"  # Health checks
+    networks:
+      - devnetwork
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+networks:
+  devnetwork:
+    external: true
+
+volumes:
+  test_data:
+  postgres_data:
