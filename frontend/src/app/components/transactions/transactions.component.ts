@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DatePipe } from '@angular/common';
 import { Transaction } from '@models';
+import { AppSettings, APP_SETTINGS } from 'app/app.config';
 
 @Component({
   selector: 'app-transactions',
@@ -26,10 +27,13 @@ export class TransactionsComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
+  private settings: AppSettings = inject(APP_SETTINGS);
+  private apiUrl = this.settings.api.baseUrl;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.http.get<{ transactions: Transaction[] }>('/api/transactions')
+    this.http.get<{ transactions: Transaction[] }>(`${this.apiUrl}/api/transactions`)
       .subscribe({
         next: (response) => {
           this.transactions = response.transactions;

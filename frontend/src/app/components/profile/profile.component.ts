@@ -13,6 +13,8 @@ import { KeycloakUser } from '../../models/keycloak-user.model';
 import { UserProfile } from '../../models/user-profile.model';
 import { MatListModule } from '@angular/material/list';
 
+import { AppSettings, APP_SETTINGS } from 'app/app.config';
+
 @Component({
   selector: 'ng-kc-profile',
   templateUrl: './profile.component.html',
@@ -31,8 +33,8 @@ import { MatListModule } from '@angular/material/list';
 export class ProfileComponent implements OnInit {
   private http = inject(HttpClient);
   private toastr = inject(ToastrService);
-
-  private apiUrl = '/api';
+  private settings: AppSettings = inject(APP_SETTINGS);
+  private apiUrl = this.settings.api.baseUrl;
 
   profileForm: FormGroup;
   loading = true;
@@ -52,7 +54,7 @@ export class ProfileComponent implements OnInit {
 
   fetchProfile(): void {
     this.http
-      .get<{ user: KeycloakUser }>(`${this.apiUrl}/profile`, {
+      .get<{ user: KeycloakUser }>(`${this.apiUrl}/api/profile`, {
         withCredentials: true,
       })
       .subscribe({
