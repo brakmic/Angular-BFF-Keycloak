@@ -1,8 +1,41 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { ApplicationConfig, InjectionToken, provideZoneChangeDetection } from '@angular/core';
 
-import { APP_ROUTES } from './app.routes';
+// Custom configuration interface
+export interface AppSettings {
+  api: {
+    baseUrl: string;
+    endpoints: {
+      users: string;
+      products: string;
+      transactions: string;
+    };
+  };
+  features: {
+    analyticsEnabled: boolean;
+    cacheTTL: number;
+  };
+}
+
+export const APP_SETTINGS = new InjectionToken<AppSettings>('app.settings');
+
+const applicationSettings: AppSettings = {
+  api: {
+    baseUrl: 'https://localhost:3000',
+    endpoints: {
+      users: '/api/profile',
+      products: '/api/products',
+      transactions: '/api/transactions'
+    }
+  },
+  features: {
+    analyticsEnabled: true,
+    cacheTTL: 300
+  }
+};
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(APP_ROUTES)]
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    { provide: APP_SETTINGS, useValue: applicationSettings }
+  ]
 };
