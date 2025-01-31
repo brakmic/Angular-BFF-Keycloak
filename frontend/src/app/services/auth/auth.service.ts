@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 
+import { AppSettings, APP_SETTINGS } from 'app/app.config';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,9 +17,8 @@ export class AuthService {
   private isLoggedIn = false;
   public authStateChanged = new Subject<void>();
 
-  private apiUrl = '/api';
-  private authUrl = '/auth';
-  private serverUrl = 'https://localhost:3000';
+  private settings: AppSettings = inject(APP_SETTINGS);
+  private apiUrl = this.settings.api.baseUrl;
 
   constructor() {
     this.refreshSessionStatus();
@@ -37,7 +38,7 @@ export class AuthService {
 
   refreshSessionStatus(): void {
     // Check if we have a valid session
-    this.http.get(`${this.apiUrl}/profile`, { withCredentials: true })
+    this.http.get(`${this.apiUrl}/api/profile`, { withCredentials: true })
       .subscribe({
         next: (_res) => {
           this.isLoggedIn = true;
@@ -61,13 +62,13 @@ export class AuthService {
     const top = window.screenY + (window.innerHeight - height) / 2;
 
     const authWindow = window.open(
-      `${this.authUrl}/keycloak`,
+      `${this.apiUrl}/auth/keycloak-init`,
       'kcLoginPopup',
       `width=${width},height=${height},left=${left},top=${top},resizable,scrollbars=yes,status=yes`
     );
 
     const receiveMessageFn = (event: MessageEvent) => {
-      if (event.origin !== this.serverUrl) return;
+      if (event.origin !== this.apiUrl) return;
 
       if (event.data?.type === 'LOGIN_SUCCESS') {
         this.markLoggedIn();
@@ -90,13 +91,13 @@ export class AuthService {
     const top = window.screenY + (window.innerHeight - height) / 2;
 
     const logoutWindow = window.open(
-      `${this.authUrl}/logout`,
+      `${this.apiUrl}/auth/logout`,
       'kcLogoutPopup',
       `width=${width},height=${height},left=${left},top=${top},resizable,scrollbars=yes,status=yes`
     );
 
     const receiveLogoutMessage = (event: MessageEvent) => {
-      if (event.origin !== this.serverUrl) return;
+      if (event.origin !== this.apiUrl) return;
 
       if (event.data?.type === 'LOGOUT_SUCCESS') {
         this.markLoggedOut();
