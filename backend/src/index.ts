@@ -57,7 +57,7 @@ interface Profile {
 
 // Extract environment variables
 const {
-  PORT: PORT_ENV,
+  PORT,
   SESSION_SECRET,
   CLIENT_SECRET,
   BFF_LOGOUT_CALLBACK_URL,
@@ -109,7 +109,7 @@ if (!KEYCLOAK_CALLBACK_URL) {
 }
 
 // Convert PORT to number
-const PORT: number = parseInt(PORT_ENV || '3000', 10);
+const SERVER_PORT: number = parseInt(PORT || '3000', 10);
 
 // Determine if the environment is production
 const isProduction = NODE_ENV === 'production';
@@ -520,14 +520,14 @@ if (fs.existsSync(BACKEND_CERT) && fs.existsSync(BACKEND_KEY)) {
     cert: fs.readFileSync(BACKEND_CERT),
   };
 
-  https.createServer(httpsOptions, app).listen(PORT, () => {
-    logger.info(`Express.js HTTPS server running on https://localhost:${PORT}`);
-    logger.info(`Open https://localhost:${PORT}/auth/keycloak-init to initiate login`);
+  https.createServer(httpsOptions, app).listen(SERVER_PORT, () => {
+    logger.info(`Express.js HTTPS server running on https://localhost:${SERVER_PORT}`);
+    logger.info(`Open https://localhost:${SERVER_PORT}/auth/keycloak-init to initiate login`);
   });
 } else {
   // Fallback to HTTP if certificates are not found (not recommended for production)
-  app.listen(PORT, () => {
-    console.log(`BFF is listening on port ${PORT}`);
+  app.listen(SERVER_PORT, () => {
+    console.log(`BFF is listening on port ${SERVER_PORT}`);
   });
 }
 
