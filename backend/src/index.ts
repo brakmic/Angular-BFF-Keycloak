@@ -57,7 +57,7 @@ interface Profile {
 
 // Extract environment variables
 const {
-  PORT: PORT_ENV,
+  PORT_ENV,
   SESSION_SECRET,
   CLIENT_SECRET,
   BFF_LOGOUT_CALLBACK_URL,
@@ -69,7 +69,7 @@ const {
   SESSION_DOMAIN,
   NODE_ENV,
 } = process.env as {
-  PORT?: string;
+  PORT_ENV?: string;
   SESSION_SECRET: string;
   CLIENT_SECRET: string;
   BFF_LOGOUT_CALLBACK_URL: string;
@@ -144,7 +144,7 @@ app.use(
       secure: isProduction, // true in production, false otherwise
       httpOnly: true,
       sameSite: isProduction ? 'none' : 'lax', // 'none' in production, 'lax' otherwise
-      domain: SESSION_DOMAIN, // So it works across bff.testapps.io / myapp.testapps.io
+      domain: SESSION_DOMAIN,
       path: '/',
       maxAge: 15 * 60 * 1000, // 15 minutes
     },
