@@ -83,6 +83,11 @@ const {
 };
 
 // Runtime Checks
+if (!PORT) {
+  logger.error('Error: PORT is not defined in the environment variables.');
+  process.exit(1);
+}
+
 if (!SESSION_SECRET) {
   logger.error('Error: SESSION_SECRET is not defined in the environment variables.');
   process.exit(1);
@@ -105,6 +110,11 @@ if (!KEYCLOAK_CLIENT_ID) {
 
 if (!KEYCLOAK_CALLBACK_URL) {
   logger.error('Error: KEYCLOAK_CALLBACK_URL is not defined in the environment variables.');
+  process.exit(1);
+}
+
+if (!BFF_LOGOUT_CALLBACK_URL) {
+  logger.error('Error: BFF_LOGOUT_CALLBACK_URL is not defined in the environment variables.');
   process.exit(1);
 }
 
@@ -139,12 +149,12 @@ app.use(
     secret: SESSION_SECRET!,
     resave: false,
     saveUninitialized: true, // Ensures session is saved even if not modified
-    rolling: true,
+    rolling: true, // Force the session identifier cookie to be set on every response
     cookie: {
       secure: isProduction, // true in production, false otherwise
       httpOnly: true,
       sameSite: isProduction ? 'none' : 'lax', // 'none' in production, 'lax' otherwise
-      domain: SESSION_DOMAIN, // So it works across bff.testapps.io / myapp.testapps.io
+      domain: SESSION_DOMAIN, // So it works across bff.your-domain.com / app.your-domain.com
       path: '/',
       maxAge: 15 * 60 * 1000, // 15 minutes
     },
@@ -180,7 +190,7 @@ passport.use(
       callbackURL: KEYCLOAK_CALLBACK_URL,
       publicClient: true, // Set to false if using confidential clients
       sslRequired: 'all',
-      clientSecret: CLIENT_SECRET,
+      clientSecret: CLIENT_SECRET, // only needed when using confidential clients
       scope: 'openid profile email',
       state: true,
       pkce: true,
