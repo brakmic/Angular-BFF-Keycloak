@@ -27,10 +27,12 @@ cd Angular-BFF-Keycloak
 ./scripts/setup_ssl.sh
 
 # Start services
+cd keycloak
 docker-compose up -d
 
-# Install frontend dependencies
+# Install frontend & backend dependencies
 cd frontend && npm install
+cd backend && npm install
 ```
 
 ## Configuration
@@ -43,9 +45,13 @@ KEYCLOAK_REALM=TestRealm
 KEYCLOAK_AUTH_SERVER_URL=https://keycloak:8443
 KEYCLOAK_CLIENT_ID=angular-public-client
 KEYCLOAK_CALLBACK_URL=https://localhost:3000/auth/keycloak/callback
+BFF_LOGOUT_CALLBACK_URL=https://localhost:3000/auth/logout/callback
+COOKIE_ORIGIN=https://localhost:4200
+SESSION_DOMAIN=  # only when running in a multi-domain environment
+NODE_TLS_REJECT_UNAUTHORIZED=0 # when using self-signed certificates
 ```
 
-`proxy.conf.json` (Angular):
+`proxy.conf.json` (Angular):  // optional
 ```json
 {
   "/api": {
@@ -105,10 +111,11 @@ docker-compose restart keycloak
 
 ## Customization
 
-- Modify `docker-compose.yml` ports
-- Update Angular routes in `app.routes.ts`
-- Extend BFF endpoints in `index.ts`
+- Modify `docker-compose.yml` Keycloak settings
 - Customize Keycloak theme in `/keycloak/themes`
+- Update Angular routes in `app.routes.ts`
+- Modify Angular `AppSettings` interface in app.config.ts
+- Extend BFF endpoints in `index.ts`
 
 ## Troubleshooting
 
