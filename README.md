@@ -47,7 +47,7 @@ KEYCLOAK_CLIENT_ID=angular-public-client
 KEYCLOAK_CALLBACK_URL=https://localhost:3000/auth/keycloak/callback
 BFF_LOGOUT_CALLBACK_URL=https://localhost:3000/auth/logout/callback
 COOKIE_ORIGIN=https://localhost:4200
-SESSION_DOMAIN=  # only when running in a multi-domain environment
+SESSION_DOMAIN=.your-domain.com  # only when running in a multi-domain environment
 NODE_TLS_REJECT_UNAUTHORIZED=0 # when using self-signed certificates
 ```
 
