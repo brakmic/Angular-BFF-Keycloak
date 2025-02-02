@@ -4,13 +4,14 @@
   "version": "1.0.0",
   "description": "Express.js backend with Keycloak authentication",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "prebuild": "pnpm clean",
     "build": "tsc --build tsconfig.json",
     "clean": "rimraf dist && rimraf coverage && rimraf tsconfig.tsbuildinfo",
     "start": "node dist/index.js",
     "start:production": "cross-env NODE_ENV=production node dist/index.js",
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon --exec 'node --import tsx --no-warnings' src/index.ts"
   },
   "keywords": [
     "backend",
@@ -28,7 +29,7 @@
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "morgan": "^1.10.0",
-    "passport-keycloak-oauth2-oidc-portable": "^2.4.1",
+    "passport-keycloak-oauth2-oidc-portable": "^2.5.0",
     "passport-oauth2": "^1.8.0",
     "winston": "^3.17.0",
     "winston-transport": "^4.9.0"
@@ -47,7 +48,7 @@
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^22.12.0",
+    "@types/node": "^22.13.0",
     "@types/passport": "^1.0.17",
     "@types/passport-oauth2": "^1.4.17",
     "@types/yargs": "^17.0.33",
@@ -66,8 +67,8 @@
     "passport": "^0.7.0",
     "rimraf": "^6.0.1",
     "ts-jest": "^29.2.5",
-    "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "winston-daily-rotate-file": "^5.0.0",
     "yargs": "^17.7.2"
