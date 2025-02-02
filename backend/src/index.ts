@@ -1,16 +1,21 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
 import KeycloakStrategy from 'passport-keycloak-oauth2-oidc-portable';
 import cors from 'cors';
-import dotenv from 'dotenv-safe';
+import * as dotenv from 'dotenv-safe';
 import crypto from 'crypto';
 import path from 'path';
-import { logger, stream } from './logger';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import { logger, stream } from './logger.js';
 import morgan from 'morgan';
 import https from 'https';
 import fs from 'fs';
-import { MockDataService } from './services/mock-data.service';
+import { MockDataService } from './services/mock-data.service.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Load environment variables
 dotenv.config({
