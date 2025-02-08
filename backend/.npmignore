@@ -1,0 +1,16 @@
+src/
+tests/
+coverage/
+.vscode/
+.idea/
+.git/
+.gitignore
+.eslintrc
+.prettierrc
+jest.config.js
+tsconfig*.json
+rollup.config.js
+rollup-plugins.js
+**/._virtual/
+**/*.map
+**/*.tsbuildinfo

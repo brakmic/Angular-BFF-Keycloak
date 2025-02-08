@@ -45,3 +45,9 @@ Thumbs.db
 
 # artifacts
 *.tsbuildinfo
+
+# package lib
+lib/
+
+# rollup
+.rollup-cache/

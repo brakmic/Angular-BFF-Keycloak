@@ -1,3 +1,21 @@
+/**
+ * mock-data.service.ts
+ * 
+ * Description:
+ *  - Generates fake user data, transactions, and product data using Faker.
+ *  - Helps simulate "backend" responses for testing and development.
+ * 
+ * API:
+ *  - Classes & Interfaces:
+ *      MockDataService:
+ *        - getUserDetails(): Returns a single "UserDetails" object with random values.
+ *        - getTransactions(count): Returns an array of "Transaction" objects.
+ *        - getProducts(count): Returns an array of "Product" objects.
+ *        - getProfileExtensions(): Returns additional profile fields for extended data.
+ *      UserDetails: Interface describing user address, phone, etc.
+ *      Transaction: Interface describing financial transaction info.
+ *      Product: Interface describing product info (name, price, etc.).
+ */
 import { faker } from '@faker-js/faker';
 
 export interface UserDetails {

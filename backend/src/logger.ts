@@ -1,12 +1,24 @@
-import { createLogger, format, transports } from 'winston';
+/**
+ * logger.ts
+ * 
+ * Description:
+ *  - Provides application-wide logging using Winston.
+ *  - Supports console and optional file-based rotation logs.
+ *  - Reads LOG_LEVEL, LOG_TO_FILE, and LOG_DIRECTORY from environment variables.
+ * 
+ * API:
+ *  - Exported Members:
+ *      logger: Winston Logger instance for logging throughout the app.
+ *      stream: Stream adapter for Morgan (HTTP request logging).
+ */
+import { createLogger, format, Logger, transports } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 import dotenv from 'dotenv-safe';
+import TransportStream from 'winston-transport';
+import { getFilePath } from './utils/paths';
+import path from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const { __dirname } = getFilePath(import.meta.url);
 
 // Load environment variables
 dotenv.config({
