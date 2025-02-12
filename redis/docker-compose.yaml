@@ -1,0 +1,38 @@
+services:
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis_server
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: "changeit"
+    command: >
+      sh -c "redis-server --requirepass ${REDIS_PASSWORD:-changeit} --appendonly yes"
+    volumes:
+      - redis_data:/data
+    networks:
+      - devnetwork
+
+  redis-commander:
+    image: ghcr.io/joeferner/redis-commander
+    container_name: redis_commander
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379:0:changeit
+      - HTTP_USER=admin                    # Add username for basic auth
+      - HTTP_PASSWORD=admin                # Add password for basic auth
+      - HTTP_AUTH_ENABLED=1                # Enable basic auth
+    ports:
+      - "8081:8081"
+    networks:
+      - devnetwork
+    depends_on:
+      - redis
+
+networks:
+  devnetwork:
+    external: true
+
+volumes:
+  redis_data:
