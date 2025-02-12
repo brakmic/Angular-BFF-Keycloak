@@ -7,12 +7,13 @@
  *  - /auth/logout
  *  - /auth/logout/callback
  * Exports: authRoutes (function returning an Express.Router)
+ * 
+ * @module routes/auth-routes
  */
 
 import { Router, Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import { logger } from '../logger';
-import { generateCodeVerifier, generateCodeChallenge } from '../utils/pkce';
 
 const {
   KEYCLOAK_AUTH_SERVER_URL,
@@ -28,28 +29,17 @@ export const authRoutes: Router = Router();
 
 /**
  * 1) /auth/keycloak-init
- * Generates PKCE parameters and saves them in session.
+ * Jst redirecting to /auth/keycloak to let OAuth2Strategy handle PKCE automatically.
  */
 authRoutes.get('/auth/keycloak-init', (req: Request, res: Response) => {
-  const code_verifier = generateCodeVerifier();
-  const code_challenge = generateCodeChallenge(code_verifier);
-
-  req.session.code_verifier = code_verifier;
-  req.session.code_challenge = code_challenge;
-
-  logger.debug('Initializing authentication session:', {
-    sessionID: req.sessionID,
-    code_verifier: '*** exists ***',
-    code_challenge: '*** exists ***',
-  });
-
-  req.session.save((err: any) => {
+  // Save session first
+  (req as any).session.save((err) => {
     if (err) {
-      logger.error('Could not save session in /auth/keycloak-init:', { error: err });
+      logger.error('Session save error:', err);
       return res.status(500).send('Session save error');
     }
-    logger.debug('Session saved successfully:', { sessionID: req.sessionID });
 
+    // Use HTML/JS redirect instead of res.redirect
     res.send(`
       <html>
         <body>
@@ -64,69 +54,80 @@ authRoutes.get('/auth/keycloak-init', (req: Request, res: Response) => {
 
 /**
  * 2) /auth/keycloak
- * Initiates the Keycloak login popup redirect
+ * Passport.js Authentication with KeycloakStrategy
  */
 authRoutes.get('/auth/keycloak', (req: Request, res: any, next: NextFunction) => {
-  logger.debug('Initiating passport.authenticate:', {
+  logger.debug('[/auth/keycloak] Request details:', {
+    url: req.url,
+    method: req.method,
+    headers: req.headers,
+    cookies: req.headers.cookie || 'missing',
     sessionID: req.sessionID,
-    code_challenge: req.session.code_challenge ? '*** exists ***' : 'missing',
   });
 
-  if (!req.session.code_challenge) {
-    logger.error('Missing code_challenge in session');
-    return res.status(400).send('Invalid authentication request.');
-  }
-
-  passport.authenticate('keycloak', {
-    scope: ['openid', 'profile', 'email'],
+  passport.authenticate('keycloak', { 
+    scope: ['openid', 'profile', 'email']
   })(req, res, (err: any) => {
     if (err) {
-      logger.error('Error during passport.authenticate:', { error: err });
+      logger.error('[/auth/keycloak] Error during passport.authenticate:', { error: err });
+      return next(err);
     }
     const locationHeader = res.getHeader('Location');
-    logger.info(`Outbound 302 to Keycloak => ${locationHeader}`);
-    next(err);
+    logger.info(`[/auth/keycloak] Outbound 302 to Keycloak => ${locationHeader}`);
   });
 });
 
 /**
  * 3) /auth/keycloak/callback
- * Keycloak redirects here after successful or failed auth
+ * Keycloak redirects here after successful or failed auth.
  */
 authRoutes.get('/auth/keycloak/callback', (req: Request, res: Response, next: NextFunction) => {
-  logger.info('Keycloak callback received:', {
-    queryParams: {
-      state: req.query.state ? '*** exists ***' : 'missing',
-      code: req.query.code ? '*** exists ***' : 'missing',
-    },
+
+  logger.debug('[/auth/keycloak/callback] Request details:', {
+    url: req.url,
+    method: req.method,
+    query: req.query,
+    headers: req.headers,
+    cookies: req.headers.cookie || 'missing',
     sessionID: req.sessionID,
   });
 
   passport.authenticate('keycloak', (err: any, user: any, info: any) => {
-    logger.debug('Passport auth result:', {
+    logger.debug('[/auth/keycloak/callback] Passport authentication result:', {
       error: err ? '*** exists ***' : 'none',
       user: user ? '*** exists ***' : 'missing',
       info: info ? '*** exists ***' : 'none',
     });
 
     if (err) {
-      logger.error('Authentication pipeline error:', { error: err, sessionID: req.sessionID });
+      logger.error('[/auth/keycloak/callback] Authentication pipeline error:', {
+        error: err instanceof Error ? err.message : 'Unknown error',
+        sessionID: (req as any).sessionID,
+        queryState: req.query.state ? '*** exists ***' : 'missing',
+      });
       return res.status(500).send('Internal Server Error');
     }
+
     if (!user) {
-      logger.warn('Authentication failed:', { info });
+      logger.warn('[/auth/keycloak/callback] Authentication failed:', {
+        info: info,
+        sessionState: (req as any).session?.oauthState ? '*** exists ***' : 'missing',
+      });
       return res.redirect('/login');
     }
 
-    req.logIn(user, (loginErr: any) => {
-      if (loginErr) {
-        logger.error('Session login error:', { error: loginErr, userId: user.id });
+    req.logIn(user, (err) => {
+      if (err) {
+        logger.error('[/auth/keycloak/callback] Session login error:', {
+          error: err instanceof Error ? err.message : 'Unknown error',
+          userId: user.id,
+        });
         return res.status(500).send('Login Error');
       }
 
-      logger.info('User authenticated successfully:', {
+      logger.info('[/auth/keycloak/callback] User authenticated successfully:', {
         userId: user.id,
-        sessionID: req.sessionID,
+        sessionID: (req as any).sessionID,
       });
 
       const popupCloseHtml = `
@@ -140,11 +141,17 @@ authRoutes.get('/auth/keycloak/callback', (req: Request, res: Response, next: Ne
         </html>
       `;
 
-      logger.debug('Sending login success response');
+      logger.debug('[/auth/keycloak/callback] Sending login success response:', {
+        headers: {
+          'set-cookie': res.getHeader('set-cookie') ? '*** exists ***' : 'missing',
+        },
+      });
+
       res.send(popupCloseHtml);
     });
   })(req, res, next);
 });
+
 
 /**
  * 4) /auth/logout
@@ -199,7 +206,7 @@ function endLocalSession(req: Request, res: Response, _reason: string) {
       logger.error('Error during logout:', { error: err });
       return res.send(renderLogoutSnippet('LOGOUT_ERROR'));
     }
-    req.session.destroy((destroyErr: any) => {
+    (req as any).session.destroy((destroyErr: any) => {
       if (destroyErr) {
         logger.error('Error destroying session:', { error: destroyErr });
         return res.send(renderLogoutSnippet('LOGOUT_ERROR'));

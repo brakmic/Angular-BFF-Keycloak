@@ -10,6 +10,8 @@
  *  - Exported Members:
  *      logger: Winston Logger instance for logging throughout the app.
  *      stream: Stream adapter for Morgan (HTTP request logging).
+ * 
+ * @module logger
  */
 import { createLogger, format, Logger, transports } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';

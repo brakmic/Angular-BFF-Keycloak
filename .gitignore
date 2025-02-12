@@ -5,4 +5,5 @@ dist/
 .pnpm-store/
 .devcontainer
 yarn.lock
+.vscode/
 

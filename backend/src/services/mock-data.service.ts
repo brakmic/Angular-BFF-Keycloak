@@ -15,6 +15,8 @@
  *      UserDetails: Interface describing user address, phone, etc.
  *      Transaction: Interface describing financial transaction info.
  *      Product: Interface describing product info (name, price, etc.).
+ * 
+ * @module services/mock-data.service
  */
 import { faker } from '@faker-js/faker';
 

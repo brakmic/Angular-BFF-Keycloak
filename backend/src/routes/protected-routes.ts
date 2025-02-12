@@ -2,6 +2,8 @@
  * protected-routes.ts
  * Defines routes that require an authenticated user.
  * Exports: protectedRoutes (function returning an Express.Router)
+ * 
+ * @module routes/protected-routes
  */
 
 import { Router, Request, Response } from 'express';

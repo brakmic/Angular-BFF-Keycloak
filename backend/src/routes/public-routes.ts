@@ -2,6 +2,8 @@
  * public-routes.ts
  * Defines routes that do not require authentication.
  * Exports: publicRoutes (function returning an Express.Router)
+ * 
+ * @module routes/public-routes
  */
 
 import { Router, Request, Response } from 'express';
@@ -21,8 +23,30 @@ publicRoutes.get('/login', (_req: Request, res: Response) => {
 });
 
 // Debug session data
-publicRoutes.get('/debug-session', (req: Request, res: Response) => {
-  res.json(req.session);
+publicRoutes.get('/debug-session', async (req: Request, res: Response) => {
+  const sessionID = req.sessionID;
+  const sessionData = req.session;
+  const isAuthenticated = req.isAuthenticated();
+  
+  // Get raw session from Redis
+  const rawSession = await new Promise((resolve) => {
+    (req.sessionStore as any).get(sessionID, (err: any, session: any) => {
+      if (err) {
+        logger.error('Error getting session from store:', err);
+        resolve(null);
+      }
+      resolve(session);
+    });
+  });
+
+  res.json({
+    sessionID,
+    sessionData,
+    isAuthenticated,
+    rawSession,
+    cookies: req.cookies,
+    signedCookies: req.signedCookies
+  });
 });
 
 // Test echo route

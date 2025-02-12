@@ -20,7 +20,7 @@ export const APP_SETTINGS = new InjectionToken<AppSettings>('app.settings');
 
 const applicationSettings: AppSettings = {
   api: {
-    baseUrl: 'https://localhost:3000',
+    baseUrl: 'https://backend.local.com:3000',
     endpoints: {
       users: '/api/profile',
       products: '/api/products',

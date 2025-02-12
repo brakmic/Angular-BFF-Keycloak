@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: express_backend
+    volumes:
+      - ${HOST_WORKSPACE}/backend/:/app
+      - /app/node_modules
+      - ${HOST_WORKSPACE}/backend/certs:/app/certs:ro
+    ports:
+      - "3000:3000"
+    networks:
+      - devnetwork
+    environment:
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+    command: npm run dev
+    depends_on:
+      - redis_server
+
+networks:
+  devnetwork:
+    external: true

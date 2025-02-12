@@ -1,0 +1,21 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: angular_frontend
+    volumes:
+      - ${HOST_WORKSPACE}/frontend:/app
+      - /app/node_modules
+      - ${HOST_WORKSPACE}/frontend/certs:/app/certs:ro
+    ports:
+      - "4200:4200"
+    networks:
+      - devnetwork
+    environment:
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+    command: npm start
+
+networks:
+  devnetwork:
+    external: true

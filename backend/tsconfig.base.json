@@ -19,7 +19,11 @@
       "@middleware/*": ["src/middleware/*"],
       "@utils/*": ["src/utils/*"],
       "@services/*": ["src/services/*"]
-    }
+    },
+    "typeRoots": [
+      "./src/types"
+    ],
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "lib"]

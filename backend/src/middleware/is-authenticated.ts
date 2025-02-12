@@ -2,6 +2,8 @@
  * is-authenticated.ts
  * Provides middleware to check if a user is authenticated.
  * Exports: isAuthenticated
+ * 
+ * @module middleware/is-authenticated
  */
 
 import { Request, Response, NextFunction } from 'express';

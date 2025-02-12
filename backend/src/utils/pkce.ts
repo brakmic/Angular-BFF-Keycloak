@@ -8,6 +8,8 @@
  * API:
  *  - generateCodeVerifier(length): Returns a random base64URL-safe string.
  *  - generateCodeChallenge(codeVerifier): Returns a SHA-256 code challenge from codeVerifier.
+ * 
+ @module utils/pkce
  */
 
 import { Buffer } from 'buffer';
