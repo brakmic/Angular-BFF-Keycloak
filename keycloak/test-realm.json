@@ -35,10 +35,10 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "https://localhost:3000/*"
+        "https://backend.local.com:3000/*"
       ],
       "webOrigins": [
-        "https://localhost:3000/*"
+        "https://backend.local.com:3000/*"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -54,7 +54,7 @@
         "realm_client": "false",
         "oidc.ciba.grant.enabled": "false",
         "backchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "https://localhost:3000/*",
+        "post.logout.redirect.uris": "https://backend.local.com:3000/*",
         "oauth2.device.authorization.grant.enabled": "false",
         "backchannel.logout.revoke.offline.tokens": "false",
         "login_theme": "",
