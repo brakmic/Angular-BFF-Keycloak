@@ -1,0 +1,90 @@
+services:
+  # Frontend Angular app
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: angular_frontend
+    volumes:
+      - type: bind
+        source: ${HOST_WORKSPACE}/frontend
+        target: /app
+      - type: volume
+        source: frontend_node_modules
+        target: /app/node_modules
+      - type: bind
+        source: ${HOST_WORKSPACE}/frontend/certs
+        target: /app/certs
+        read_only: true
+    ports:
+      - "4200:4200"
+    environment:
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+    networks:
+      - devnetwork
+    depends_on:
+      - backend
+
+  # Backend Express.js app
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: express_backend
+    volumes:
+      - type: bind
+        source: ${HOST_WORKSPACE}/backend
+        target: /app
+      - type: volume
+        source: backend_node_modules
+        target: /app/node_modules
+      - type: bind
+        source: ${HOST_WORKSPACE}/backend/certs
+        target: /app/certs
+        read_only: true
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - SESSION_STORE=redis
+    networks:
+      - devnetwork
+    depends_on:
+      - keycloak
+      - redis
+
+  redis:
+    extends:
+      file: ./redis/docker-compose.yaml
+      service: redis
+
+  redis-commander:
+    extends:
+      file: ./redis/docker-compose.yaml
+      service: redis-commander
+    depends_on:
+      - redis
+
+  postgres:
+    extends:
+      file: ./keycloak/docker-compose.yaml
+      service: postgres
+
+  keycloak:
+    extends:
+      file: ./keycloak/docker-compose.yaml
+      service: keycloak
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+networks:
+  devnetwork:
+    external: true
+
+volumes:
+  postgres_data:
+  test_data:
+  redis_data:
+  frontend_node_modules:
+  backend_node_modules:
