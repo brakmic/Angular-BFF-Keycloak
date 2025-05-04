@@ -80,11 +80,16 @@ services:
 
 networks:
   devnetwork:
-    external: true
+    driver: bridge
+
+# networks:
+  # devnetwork:
+    # external: true
 
 volumes:
   postgres_data:
   test_data:
+  import_dir:
   redis_data:
   frontend_node_modules:
   backend_node_modules:

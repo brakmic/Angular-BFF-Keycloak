@@ -36,10 +36,19 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_IMPORT: /opt/keycloak/data/import/test-realm.json
     volumes:
-      - "${HOST_WORKSPACE}/keycloak/test-realm.json:/opt/keycloak/data/import/test-realm.json"
-      - test_data:/opt/keycloak/data
-      - "${HOST_WORKSPACE}/keycloak/certs:/opt/keycloak/conf/certificates"
-    command: 
+      - type: volume
+        source: test_data
+        target: /opt/keycloak/data
+      - type: volume
+        source: import_dir
+        target: /opt/keycloak/data/import
+      - type: bind
+        source: ./test-realm.json
+        target: /opt/keycloak/data/import/test-realm.json
+      - type: bind
+        source: ./certs
+        target: /opt/keycloak/conf/certificates
+    command:
       - start
       - --import-realm
       - --verbose
@@ -61,3 +70,4 @@ networks:
 volumes:
   test_data:
   postgres_data:
+  import_dir:
